@@ -4,7 +4,7 @@ This repository hosts an automatically updated RSS feed of Brazilian Jiu-Jitsu e
 
 ## Feed URL
 
-You can subscribe to the feed at: https://[your-username].github.io/[repo-name]/flograppling_events.xml
+You can subscribe to the feed at: https://frankt86.github.io/Flo-event-rss/flograppling_events.xml
 
 ## How It Works
 
