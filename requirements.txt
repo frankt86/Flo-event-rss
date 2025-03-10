@@ -1,3 +1,4 @@
 requests
 beautifulsoup4
 PyRSS2Gen
+selenium
