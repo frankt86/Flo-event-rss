@@ -7,19 +7,34 @@ on:
   push:
     branches: [ main ]  # Also run when code is pushed to main
 
+permissions:
+  contents: write  # Give the workflow permission to write to the repo
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch all history for all branches and tags
-          token: ${{ secrets.GH_TOKEN }} # Use your PAT instead of the default token
+          token: ${{ secrets.GH_TOKEN }}
       
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      
+      - name: Install Chrome and ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          sudo apt-get install -y google-chrome-stable
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
+          wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION} -O chromedriver_version.txt
+          CHROMEDRIVER_VERSION=$(cat chromedriver_version.txt)
+          wget https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
       
       - name: Install dependencies
         run: |
@@ -34,5 +49,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add docs/
+          git add debug_page.html || true
           git commit -m "Update RSS feed - $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push
