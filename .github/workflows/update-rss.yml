@@ -23,18 +23,13 @@ jobs:
         with:
           python-version: '3.10'
       
-      - name: Install Chrome and ChromeDriver
+      - name: Install Chrome
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget unzip
           sudo apt-get install -y google-chrome-stable
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
-          wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION} -O chromedriver_version.txt
-          CHROMEDRIVER_VERSION=$(cat chromedriver_version.txt)
-          wget https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
+      
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
       
       - name: Install dependencies
         run: |
